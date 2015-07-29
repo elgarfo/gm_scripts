@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hacker Experience Tools
 // @namespace    https://github.com/elgarfo/hetools
-// @version      0.2
+// @version      0.3
 // @description  hacker experience tools
 // @author       elgarfo
 // @match        *://hackerexperience.com/*
@@ -54,6 +54,16 @@ function displayError(message){
 function getIP()
 {
     return $('input.browser-bar:first').val();
+}
+
+function addGlobalStyle(css) {
+    var head, style;
+    head = document.getElementsByTagName('head')[0];
+    if (!head) { return; }
+    style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = css;
+    head.appendChild(style);
 }
 
 //functions
@@ -113,10 +123,13 @@ function showEasyBankLogin()
     }
 
     //hide password input
-    $('#loginform input[name=pass]:first').parent().parent().parent().hide();
+    //$('#loginform input[name=pass]:first').parent().parent().parent().hide();
 
     //replace input with dropdown
-    $('#loginform input[name=acc]:first').replaceWith(dd);
+    //$('#loginform input[name=acc]:first').replaceWith(dd);
+
+    $('#loginform input[name=acc]:first').parent().parent().parent().clone().find('input[name=acc]:first').replaceWith(dd).end().insertBefore($('#loginform input[name=acc]:first').parent().parent().parent());
+    addGlobalStyle('#loginbox { height: 236px !important; }');
 }
 
 function getBankAccountsForIP(ip)
