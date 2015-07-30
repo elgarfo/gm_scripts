@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hacker Experience Tools
 // @namespace    https://github.com/elgarfo/hetools
-// @version      0.3
+// @version      0.4
 // @description  hacker experience tools
 // @author       elgarfo
 // @match        *://hackerexperience.com/*
@@ -26,6 +26,9 @@ isPage('bankaccounts') && updateHackedBankAccounts();
 isPage('internet?action=login&type=bank') && showEasyBankLogin();
 isPage('internet?bAction=show') && showTransferHelper();
 isPage('finances') && updateOwnedBankAccounts();
+isPage('missions') && showEasyBankHackLink();
+isPage('internet?bAction=show') && storeBalance();
+isPage('missions') && insertBalance();
 
 //utils
 function isPage(url)
@@ -67,6 +70,32 @@ function addGlobalStyle(css) {
 }
 
 //functions
+function storeBalance()
+{
+    var amount = $('.finance-box strong').html().replace('$','');
+    GM_setValue('accountAmount', amount);
+}
+
+function insertBalance()
+{
+    $('#amount-input').each(function(i,e){
+        $(this).val('$' + GM_getValue('accountAmount'));
+    });
+}
+
+function showEasyBankHackLink()
+{
+    var acc = $('.article-post > p > font').html().replace('#','');
+    var ip = $('.article-post > p > a.link-default').html();
+    $('<a></a>')
+        .prop('href', '/internet?ip=' + ip + '&action=hack&acc=' + acc)
+        .append('<span></span>').find('span:first')
+            .addClass('btn')
+            .html("hack account")
+            .end()
+        .appendTo($('span.btn-danger').parent())
+    ;
+}
 
 function showTransferHelper()
 {
